@@ -17,9 +17,13 @@ import {
 import "./Sidebar.css";
 import SidebarOption from "../SidebarOption/sidebarOption";
 import db from "../../config/firebase";
+import {useStateValue} from "../../store/StateProvider";
 
 const Sidebar = () => {
+
     const [channels, setChannels] = useState([]);
+    const [state] = useStateValue();
+
     useEffect(() => {
         db.collection("rooms").onSnapshot((snapshot) =>
             setChannels(
@@ -38,7 +42,7 @@ const Sidebar = () => {
                     <h2>Clever Programmer</h2>
                     <h3>
                         <FiberManualRecordIcon />
-                        Salman Fazal
+                        {state.user?.displayName}
                     </h3>
                 </div>
                 <CreateIcon />
@@ -54,10 +58,10 @@ const Sidebar = () => {
 
             <hr/>
 
-            <SidebarOption Icon={Add} title={"Add Channel"} />
+            <SidebarOption Icon={Add} title={"Add Channel"} addChannelOption />
 
             {channels.map(channel => (
-                <SidebarOption title={channel.name} id={channel.id} />
+                <SidebarOption title={channel.name} id={channel.id} key={channel.id} />
             ))}
         </div>
     );
